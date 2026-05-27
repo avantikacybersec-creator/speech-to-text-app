@@ -1,0 +1,19 @@
+# IntelliJ
+.idea/
+*.iml
+
+# Uploads
+uploads/
+
+# Node modules
+frontend/node_modules/
+
+# Build folders
+target/
+dist/
+
+# Environment files
+.env
+
+# Logs
+*.log
