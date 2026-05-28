@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 public class SpeechService {
 
 
-    @Value("${deepgram.api.key}")
+    @Value("${DEEPGRAM_API_KEY}")
     private String API_KEY;
     @Autowired
     private TranscriptRepository transcriptRepository;

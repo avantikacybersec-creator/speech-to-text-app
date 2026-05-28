@@ -32,7 +32,7 @@ function UploadAudio() {
             setMessage("");
 
             const response = await fetch(
-                "http://localhost:8080/api/speech/upload",
+                "https://speech-to-text-app-des3.onrender.com/api/speech/upload",
                 {
                     method: "POST",
                     body: formData,
@@ -64,7 +64,7 @@ function UploadAudio() {
         try {
 
             const response = await fetch(
-                "http://localhost:8080/api/speech/history"
+                "https://speech-to-text-app-des3.onrender.com/api/speech/history"
             );
 
             const data = await response.json();
