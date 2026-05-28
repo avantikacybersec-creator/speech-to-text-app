@@ -5,9 +5,10 @@ WORKDIR /app
 COPY . .
 
 RUN chmod +x mvnw
+
 RUN ./mvnw clean package -DskipTests
 
-COPY target/demo-0.0.1-SNAPSHOT.jar app.jar
+RUN cp target/demo-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
 
