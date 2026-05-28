@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
+
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/speech")
@@ -41,14 +42,6 @@ public class SpeechController {
         file.transferTo(destFile);
 
         String transcriptText = speechService.transcribeAudio(destFile);
-
-        Transcript transcript = new Transcript();
-
-        transcript.setFileName(file.getOriginalFilename());
-        transcript.setTranscript(transcriptText);
-        transcript.setUploadedAt(LocalDateTime.now());
-
-        transcriptRepository.save(transcript);
 
         return transcriptText;
     }

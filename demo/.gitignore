@@ -35,3 +35,6 @@ build/
 .idea/
 target/
 application.properties
+demo/src/main/resources/application.properties
+uploads/
+frontend/node_modules/

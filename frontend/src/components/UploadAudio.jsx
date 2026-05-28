@@ -5,7 +5,10 @@ function UploadAudio() {
     const [file, setFile] = useState(null);
     const [transcript, setTranscript] = useState("");
     const [history, setHistory] = useState([]);
+
     const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -14,7 +17,7 @@ function UploadAudio() {
     const handleUpload = async () => {
 
         if (!file) {
-            alert("Select audio file");
+            setError("Please select audio file");
             return;
         }
 
@@ -24,6 +27,9 @@ function UploadAudio() {
         try {
 
             setLoading(true);
+
+            setError("");
+            setMessage("");
 
             const response = await fetch(
                 "http://localhost:8080/api/speech/upload",
@@ -36,13 +42,21 @@ function UploadAudio() {
             const data = await response.text();
 
             setTranscript(data);
+
+            setMessage("Audio uploaded successfully!");
+
             fetchHistory();
 
         } catch (error) {
+
             console.error(error);
-            alert("Upload failed");
+
+            setError("Upload failed");
+
         } finally {
+
             setLoading(false);
+
         }
     };
     const fetchHistory = async () => {
@@ -58,7 +72,9 @@ function UploadAudio() {
             setHistory(data);
 
         } catch (error) {
+
             console.error(error);
+
         }
     };
     useEffect(() => {
@@ -80,15 +96,22 @@ function UploadAudio() {
                 {loading ? "Uploading..." : "Upload Audio"}
             </button>
 
-            <div className="transcript-box">
+            {loading && <p>Uploading and processing audio...</p>}
 
-                <h3>Transcript</h3>
+            {message && <p>{message}</p>}
 
-                <p>
-                    {transcript || "Transcript will appear here..."}
-                </p>
+            {error && <p>{error}</p>}
 
-            </div>
+
+            {transcript && (
+                <div className="transcript-card">
+
+                    <h3>Transcript</h3>
+
+                    <p>{transcript}</p>
+
+                </div>
+            )}
             <div className="transcript-box">
 
                 <h3>Previous Transcripts</h3>
@@ -115,6 +138,12 @@ function UploadAudio() {
                             </p>
 
                             <p>{item.transcript}</p>
+                            <audio controls>
+                                <source
+                                    src={`http://localhost:8080/uploads/${item.fileName}`}
+                                    type="audio/mpeg"
+                                />
+                            </audio>
 
                             <p>
                                 <strong>Uploaded:</strong>{" "}

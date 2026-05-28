@@ -16,10 +16,19 @@ public class Transcript {
     private String transcript;
 
     private LocalDateTime uploadedAt;
+    private String filePath;
 
-    public Long getId() {
-        return id;
+    public String getFilePath() {
+        return filePath;
     }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+
+
+
 
     public String getFileName() {
         return fileName;

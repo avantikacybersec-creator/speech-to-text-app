@@ -2,17 +2,29 @@ package com.stt.demo.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stt.demo.model.Transcript;
+import com.stt.demo.repository.TranscriptRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Value;
+
+
 
 @Service
 public class SpeechService {
 
-    private final String API_KEY = "50944e8d86011b63504f1ea710b1714580f3bead";
+
+    @Value("${deepgram.api.key}")
+    private String API_KEY;
+    @Autowired
+    private TranscriptRepository transcriptRepository;
 
     public String transcribeAudio(File audioFile) throws Exception {
 
@@ -31,12 +43,11 @@ public class SpeechService {
                 .bodyToMono(String.class)
                 .block();
 
-        // Parse JSON response
         ObjectMapper mapper = new ObjectMapper();
 
         JsonNode jsonNode = mapper.readTree(response);
 
-        String transcript = jsonNode
+        String transcriptText = jsonNode
                 .get("results")
                 .get("channels")
                 .get(0)
@@ -45,6 +56,19 @@ public class SpeechService {
                 .get("transcript")
                 .asText();
 
-        return transcript;
+        // SAVE TO DATABASE
+        Transcript transcript = new Transcript();
+
+        transcript.setFileName(audioFile.getName());
+
+        transcript.setFilePath(audioFile.getAbsolutePath());
+
+        transcript.setTranscript(transcriptText);
+
+        transcript.setUploadedAt(LocalDateTime.now());
+
+        transcriptRepository.save(transcript);
+
+        return transcriptText;
     }
 }
