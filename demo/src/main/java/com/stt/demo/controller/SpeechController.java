@@ -26,7 +26,13 @@ public class SpeechController {
 
     @PostMapping("/upload")
     public String uploadAudio(@RequestParam("file") MultipartFile file) throws Exception {
+        if (file.isEmpty()) {
+            return "File is empty";
+        }
 
+        if (!file.getContentType().startsWith("audio")) {
+            return "Only audio files allowed";
+        }
         String uploadDir = System.getProperty("user.dir") + "/uploads/";
 
         File directory = new File(uploadDir);
@@ -35,7 +41,10 @@ public class SpeechController {
             directory.mkdirs();
         }
 
-        String filePath = uploadDir + file.getOriginalFilename();
+        String uniqueFileName =
+                System.currentTimeMillis() + "_" + file.getOriginalFilename();
+
+        String filePath = uploadDir + uniqueFileName;
 
         File destFile = new File(filePath);
 
