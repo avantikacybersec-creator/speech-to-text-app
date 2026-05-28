@@ -37,7 +37,7 @@ public class SpeechService {
 
         String response = webClient.post()
                 .uri("/v1/listen")
-                .contentType(MediaType.valueOf("audio/wav"))
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .bodyValue(audioBytes)
                 .retrieve()
                 .bodyToMono(String.class)
