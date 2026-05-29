@@ -69,7 +69,7 @@ public class SpeechService {
         Map uploadResult = cloudinary.uploader().upload(
                 audioFile,
                 ObjectUtils.asMap(
-                        "resource_type", "auto",
+                        "resource_type", "raw",
                         "upload_preset", "stt_audio"
                 )
         );
