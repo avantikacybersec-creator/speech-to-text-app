@@ -23,7 +23,7 @@ import java.util.Map;
 public class SpeechService {
 
 
-    @Value("${DEEPGRAM_API_KEY}")
+    @Value("${deepgram.api.key}")
     private String API_KEY;
     @Autowired
     private TranscriptRepository transcriptRepository;
@@ -69,8 +69,7 @@ public class SpeechService {
         Map uploadResult = cloudinary.uploader().upload(
                 audioFile,
                 ObjectUtils.asMap(
-                        "resource_type", "video",
-                        "upload_preset", "f66kjtdb"
+                        "resource_type", "video"
                 )
         );
 
