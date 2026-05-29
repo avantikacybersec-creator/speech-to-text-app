@@ -13,6 +13,8 @@ public class FileConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
         registry.addResourceHandler("/audio/**")
-                .addResourceLocations("file:uploads/");
+                .addResourceLocations(
+                        "file:" + System.getProperty("user.dir") + "/uploads/"
+                );
     }
 }
