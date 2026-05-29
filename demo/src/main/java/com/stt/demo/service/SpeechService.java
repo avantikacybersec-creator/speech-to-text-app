@@ -61,7 +61,7 @@ public class SpeechService {
 
         transcript.setFileName(audioFile.getName());
 
-        transcript.setFilePath(audioFile.getAbsolutePath());
+        transcript.setFilePath("/audio/" + audioFile.getName());
 
         transcript.setTranscript(transcriptText);
 
