@@ -15,7 +15,9 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Value;
 
-
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import java.util.Map;
 
 @Service
 public class SpeechService {
@@ -25,6 +27,9 @@ public class SpeechService {
     private String API_KEY;
     @Autowired
     private TranscriptRepository transcriptRepository;
+
+    @Autowired
+    private Cloudinary cloudinary;
 
     public String transcribeAudio(File audioFile) throws Exception {
 
@@ -61,7 +66,16 @@ public class SpeechService {
 
         transcript.setFileName(audioFile.getName());
 
-        transcript.setFilePath("/audio/" + audioFile.getName());
+        Map uploadResult = cloudinary.uploader().upload(
+                audioFile,
+                ObjectUtils.asMap(
+                        "resource_type", "video"
+                )
+        );
+
+        String audioUrl = uploadResult.get("secure_url").toString();
+
+        transcript.setFilePath(audioUrl);
 
         transcript.setTranscript(transcriptText);
 
