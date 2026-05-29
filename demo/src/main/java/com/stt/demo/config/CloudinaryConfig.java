@@ -14,7 +14,10 @@ public class CloudinaryConfig {
         String cloudName = System.getenv("CLOUDINARY_CLOUD_NAME");
 
         System.out.println("========== CLOUDINARY DEBUG ==========");
-        System.out.println("Cloud Name: " + cloudName);
+
+        System.out.println("Cloud Name: " + System.getenv("CLOUDINARY_CLOUD_NAME"));
+        System.out.println("API Key: " + System.getenv("CLOUDINARY_API_KEY"));
+        System.out.println("API Secret: " + System.getenv("CLOUDINARY_API_SECRET"));
         System.out.println("=====================================");
 
         return new Cloudinary(ObjectUtils.asMap(
