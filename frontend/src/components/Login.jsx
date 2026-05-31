@@ -9,8 +9,7 @@ function Login() {
 
     try {
       const response = await fetch(
-        "https://speech-to-text-app-des3.onrender.com/api/users/login",
-        {
+        "https://speech-to-text-app-des3.onrender.com/api/users/login",{
           method: "POST",
           headers: {
             "Content-Type": "application/json",
