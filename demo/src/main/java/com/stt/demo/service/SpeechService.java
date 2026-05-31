@@ -2,6 +2,7 @@ package com.stt.demo.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.stt.demo.exception.TranscriptNotFoundException;
 import com.stt.demo.model.Transcript;
 import com.stt.demo.repository.TranscriptRepository;
 
@@ -17,7 +18,11 @@ import org.springframework.beans.factory.annotation.Value;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 
 @Service
 public class SpeechService {
@@ -41,7 +46,7 @@ public class SpeechService {
                 .build();
 
         String response = webClient.post()
-                .uri("/v1/listen")
+                .uri("/v1/listen?model=nova-3&smart_format=true&punctuate=true")
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .bodyValue(audioBytes)
                 .retrieve()
@@ -85,5 +90,33 @@ public class SpeechService {
         transcriptRepository.save(transcript);
 
         return transcriptText;
+    }
+    public Transcript getTranscriptById(Long id){
+
+        return transcriptRepository.findById(id)
+                .orElseThrow(() ->
+                        new TranscriptNotFoundException(
+                                "Transcript not found with id : " + id
+                        )
+                );
+
+
+    }
+    public List<Transcript> searchTranscript(
+            String keyword){
+
+        return transcriptRepository
+                .findByTranscriptContainingIgnoreCase(
+                        keyword
+                );
+    }
+    public void deleteTranscript(Long id) {
+
+        Transcript transcript = transcriptRepository.findById(id)
+                .orElseThrow(() ->
+                        new TranscriptNotFoundException(
+                                "Transcript not found with id: " + id));
+
+        transcriptRepository.delete(transcript);
     }
 }

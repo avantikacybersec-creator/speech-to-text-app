@@ -1,5 +1,9 @@
 package com.stt.demo.controller;
 
+import com.stt.demo.dto.LoginResponse;
+import com.stt.demo.dto.LoginRequest;
+import com.stt.demo.dto.RegisterRequest;
+import com.stt.demo.dto.UserResponse;
 import com.stt.demo.model.User;
 import com.stt.demo.service.UserService;
 import jakarta.validation.Valid;
@@ -16,16 +20,19 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public User registerUser(@Valid @RequestBody User user) {
-        return userService.registerUser(user);
+    public UserResponse registerUser(
+            @Valid @RequestBody RegisterRequest request) {
+
+        return userService.registerUser(request);
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestBody Map<String, String> loginData) {
+    public LoginResponse loginUser(
+            @Valid @RequestBody LoginRequest request) {
 
-        String email = loginData.get("email");
-        String password = loginData.get("password");
-
-        return userService.loginUser(email, password);
+        return userService.loginUser(
+                request.getEmail(),
+                request.getPassword()
+        );
     }
 }

@@ -9,7 +9,7 @@ function UploadAudio() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
-
+    const token ="eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdmFudGlrYTEyM0BnbWFpbC5jb20iLCJpYXQiOjE3ODAyMjE2NTQsImV4cCI6MTc4MDMwODA1NH0.aH-j65Gn8Un0TD2eQqS-lUfw3Eo8drCYA2KyKYaI26M";
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
     };
@@ -35,6 +35,9 @@ function UploadAudio() {
                 "https://speech-to-text-app-des3.onrender.com/api/speech/upload",
                 {
                     method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
                     body: formData,
                 }
             );
@@ -64,7 +67,12 @@ function UploadAudio() {
         try {
 
             const response = await fetch(
-                "https://speech-to-text-app-des3.onrender.com/api/speech/history"
+                "https://speech-to-text-app-des3.onrender.com/api/speech/history",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
             );
 
             const data = await response.json();

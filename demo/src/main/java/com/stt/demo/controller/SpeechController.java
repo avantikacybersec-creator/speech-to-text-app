@@ -1,5 +1,6 @@
 package com.stt.demo.controller;
 
+import com.stt.demo.exception.InvalidFileException;
 import com.stt.demo.model.Transcript;
 import com.stt.demo.repository.TranscriptRepository;
 import java.time.LocalDateTime;
@@ -27,11 +28,11 @@ public class SpeechController {
     @PostMapping("/upload")
     public String uploadAudio(@RequestParam("file") MultipartFile file) throws Exception {
         if (file.isEmpty()) {
-            return "File is empty";
+            throw new InvalidFileException("File is empty");
         }
 
         if (!file.getContentType().startsWith("audio")) {
-            return "Only audio files allowed";
+            throw new InvalidFileException("Only audio files are allowed");
         }
         String uploadDir = System.getProperty("user.dir") + "/uploads/";
 
@@ -57,5 +58,26 @@ public class SpeechController {
     @GetMapping("/history")
     public List<Transcript> getHistory() {
         return transcriptRepository.findAll();
+    }
+    @GetMapping("/{id}")
+    public Transcript getTranscriptById(
+            @PathVariable Long id){
+
+        return speechService.getTranscriptById(id);
+    }
+    @GetMapping("/search")
+    public List<Transcript> searchTranscript(
+            @RequestParam String keyword){
+
+        return speechService.searchTranscript(
+                keyword
+        );
+    }
+    @DeleteMapping("/{id}")
+    public String deleteTranscript(@PathVariable Long id) {
+
+        speechService.deleteTranscript(id);
+
+        return "Transcript deleted successfully";
     }
 }
