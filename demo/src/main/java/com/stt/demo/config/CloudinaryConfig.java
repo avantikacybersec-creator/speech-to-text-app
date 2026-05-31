@@ -21,11 +21,7 @@ public class CloudinaryConfig {
     @Bean
     public Cloudinary cloudinary() {
 
-        System.out.println("========== CLOUDINARY DEBUG ==========");
-        System.out.println("Cloud Name: " + cloudName);
-        System.out.println("API Key: " + apiKey);
-        System.out.println("API Secret: " + apiSecret);
-        System.out.println("=====================================");
+
 
         return new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", cloudName,

@@ -1,15 +1,20 @@
 import Register from "./components/Register";
 import Login from "./components/Login";
+import UploadAudio from "./components/UploadAudio";
 
 function App() {
-  return (
-    <div>
-      <h1>Speech To Text App</h1>
+  const token = localStorage.getItem("token");
 
+  if (token) {
+    return <UploadAudio />;
+  }
+
+  return (
+    <>
       <Register />
       <hr />
       <Login />
-    </div>
+    </>
   );
 }
 

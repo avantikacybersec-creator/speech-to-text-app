@@ -8,71 +8,65 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    console.log("REGISTER CLICKED");
+    try {
+      const response = await fetch(
+        "https://speech-to-text-app-des3.onrender.com/api/users/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+          }),
+        }
+      );
 
-    const response = await fetch(
-      "https://speech-to-text-app-des3.onrender.com/api/users/register",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-        }),
-      }
-    );
+      const data = await response.text();
 
-    console.log("STATUS:", response.status);
-
-    const data = await response.text();
-
-    console.log("RESPONSE:", data);
-
-    alert(data);
+      alert(data);
+    } catch (err) {
+      console.error(err);
+      alert("Registration failed");
+    }
   };
 
   return (
-    <div>
-      <h2>Register</h2>
+    <div className="auth-container">
+      <div className="auth-card">
 
-      <form onSubmit={handleRegister}>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <h2>Create Account</h2>
 
-        <br /><br />
+        <form onSubmit={handleRegister}>
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <input
+            type="email"
+            placeholder="Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <br /><br />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <button type="submit">
+            Register
+          </button>
+        </form>
 
-        <br /><br />
-
-        <button
-          type="submit"
-          onClick={() => console.log("BUTTON CLICKED")}
-        >
-          Register
-        </button>
-      </form>
+      </div>
     </div>
   );
 }

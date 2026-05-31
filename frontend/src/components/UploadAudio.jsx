@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
+import { API_BASE } from "../config";
 
 function UploadAudio() {
 
-    const [file, setFile] = useState(null);
-    const [transcript, setTranscript] = useState("");
-    const [history, setHistory] = useState([]);
-
+   const [file, setFile] = useState(null);
+   const [transcript, setTranscript] = useState("");
+   const [history, setHistory] = useState([]);
+   const [audioUrl, setAudioUrl] = useState("");
+    const [openId, setOpenId] = useState(null);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
-    const token =
-    "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdmFudGlrYTEyM0BnbWFpbC5jb20iLCJpYXQiOjE3ODAyMjYwNTUsImV4cCI6MTc4MDMxMjQ1NX0.-1gr-ZNvcZUykv8CnvLZMfJorGLKLj36Vpfp3G9pqDU";
+    const token = localStorage.getItem("token") || "";
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
     };
@@ -32,20 +33,19 @@ function UploadAudio() {
             setError("");
             setMessage("");
 
-            const response = await fetch(
-                "https://speech-to-text-app-des3.onrender.com/api/speech/upload",
-                {
-                    method: "POST",
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
-                    body: formData,
-                }
-            );
+           const response = await fetch(`${API_BASE}/api/speech/upload`, {
+               method: "POST",
+               headers: {
+                   Authorization: `Bearer ${token}`
+               },
+               body: formData,
+           });
 
             const data = await response.text();
 
             setTranscript(data);
+
+            setAudioUrl(URL.createObjectURL(file));
 
             setMessage("Audio uploaded successfully!");
 
@@ -67,14 +67,11 @@ function UploadAudio() {
 
         try {
 
-            const response = await fetch(
-                "https://speech-to-text-app-des3.onrender.com/api/speech/history",
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+            const response = await fetch(`${API_BASE}/api/speech/history`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
-            );
+            });
 
             const data = await response.json();
 
@@ -93,19 +90,46 @@ function UploadAudio() {
     return (
         <div className="container">
 
-            <h1>Speech To Text</h1>
+            <div className="header">
+                <h1>🎙️ Speech To Text Converter</h1>
 
-            <input
-                type="file"
-                accept=".wav"
-                onChange={handleFileChange}
-            />
+                <button
+                    onClick={() => {
+                        localStorage.removeItem("token");
+                        window.location.reload();
+                    }}
+                >
+                    Logout
+                </button>
+            </div>
 
-            <button onClick={handleUpload}>
-                {loading ? "Uploading..." : "Upload Audio"}
-            </button>
+           <div className="upload-card">
 
-            {loading && <p>Uploading and processing audio...</p>}
+               <h2>Upload Audio</h2>
+
+               <p>
+                   Upload an audio file and instantly generate a transcript.
+               </p>
+
+               <input
+                   type="file"
+                   accept=".wav,.mp3"
+                   onChange={handleFileChange}
+               />
+
+               <br /><br />
+
+               <button onClick={handleUpload}>
+                   {loading ? "Uploading..." : "Upload Audio"}
+               </button>
+
+           </div>
+
+            {loading && (
+              <p style={{ textAlign: "center", color: "#4f46e5", marginTop: "10px" }}>
+                ⏳ Processing your audio... please wait
+              </p>
+            )}
 
             {message && <p>{message}</p>}
 
@@ -119,50 +143,53 @@ function UploadAudio() {
 
                     <p>{transcript}</p>
 
+                    <hr />
+
+                    <h3>Uploaded Audio</h3>
+
+                    <audio controls>
+                      <source src={audioUrl} type="audio/mpeg" />
+                    </audio>
+
                 </div>
             )}
             <div className="transcript-box">
 
-                <h3>Previous Transcripts</h3>
+              <h3>Previous Transcripts</h3>
 
-                {
-                    history.map((item) => (
-                        <div
-                            key={item.id}
-                            style={{
-                                marginBottom: "20px",
-                                padding: "15px",
-                                backgroundColor: "#ffffff",
-                                borderRadius: "8px",
-                                border: "1px solid #ddd"
-                            }}
-                        >
+              {history.length === 0 ? (
+                <p style={{ color: "gray", marginTop: "10px" }}>
+                  No transcripts yet. Upload your first audio 🎧
+                </p>
+              ) : (
+                history.map((item) => (
+                  <details key={item.id} style={{
+                    marginBottom: "20px",
+                    padding: "15px",
+                    backgroundColor: "#fff",
+                    borderRadius: "10px",
+                    border: "1px solid #eee"
+                  }}>
 
-                            <p>
-                                <strong>File:</strong> {item.fileName}
-                            </p>
+                    <summary style={{ cursor: "pointer", fontWeight: "600" }}>
+                      🎧 {item.fileName}
+                    </summary>
 
-                            <p>
-                                <strong>Transcript:</strong>
-                            </p>
+                    <p style={{ marginTop: "10px" }}>
+                      {item.transcript}
+                    </p>
 
-                            <p>{item.transcript}</p>
-                           <audio controls>
-                               <source
-                                   src={item.filePath}
-                                   type="audio/mpeg"
-                               />
-                           </audio>
+                    <audio controls>
+                      <source src={item.filePath} type="audio/mpeg" />
+                    </audio>
 
-                            <p>
-                                <strong>Uploaded:</strong>{" "}
-                                {new Date(item.uploadedAt)
-                                    .toLocaleString()}
-                            </p>
+                    <p style={{ marginTop: "10px", fontSize: "12px", color: "gray" }}>
+                      {new Date(item.uploadedAt).toLocaleString()}
+                    </p>
 
-                        </div>
-                    ))
-                }
+                  </details>
+                ))
+              )}
 
             </div>
 
