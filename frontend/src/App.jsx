@@ -1,9 +1,14 @@
-import UploadAudio from "./components/UploadAudio";
+import Register from "./components/Register";
+import Login from "./components/Login";
 
 function App() {
   return (
     <div>
-      <UploadAudio />
+      <h1>Speech To Text App</h1>
+
+      <Register />
+      <hr />
+      <Login />
     </div>
   );
 }
