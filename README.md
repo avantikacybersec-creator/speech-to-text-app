@@ -322,38 +322,14 @@ cloudinary.api_key=YOUR_API_KEY
 cloudinary.api_secret=YOUR_API_SECRET
 
 ⸻
+<img width="1908" height="1014" alt="Screenshot 2026-05-31 222557" src="https://github.com/user-attachments/assets/ea6eea0f-c9a7-4fe1-adfd-d0c69b36ed71" />
+<img width="1914" height="945" alt="Screenshot 2026-05-31 220811" src="https://github.com/user-attachments/assets/9e44067a-3b08-4805-b282-a0edd424d04a" />
 
-Project Structure
 
-src
- ├── controller
- │     ├── UserController
- │     └── SpeechController
- │
- ├── service
- │     ├── UserService
- │     └── SpeechService
- │
- ├── repository
- │     ├── UserRepository
- │     └── TranscriptRepository
- │
- ├── model
- │     ├── User
- │     └── Transcript
- │
- ├── exception
- │     ├── GlobalExceptionHandler
- │     ├── UserNotFoundException
- │     ├── InvalidCredentialsException
- │     └── InvalidFileException
- │
- ├── config
- │     ├── SecurityConfig
- │     └── CloudinaryConfig
- │
- └── resources
-       └── application.properties
+
+
+
+
 
 ⸻
 
